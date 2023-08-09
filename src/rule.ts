@@ -73,7 +73,7 @@ export function createBadgeRule(md: MarkdownIt, options: PluginOptions) {
     while (end < state.src.length && state.src.slice(end, end + 2) !== ruleEndsWith) end += 1;
 
     // Create a token for the inline rule
-    const className = [defaultClassName, options.className].filter(Boolean).join(' ');
+    const className = [defaultClassName, options?.className].filter(Boolean).join(' ');
     const token = state.push(baseRendererName, '', 0);
     const content = state.src.slice(start, end);
     token.content = getBadgeContent(content, className);
