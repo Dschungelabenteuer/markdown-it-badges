@@ -50,11 +50,11 @@ Some other content…
 Output:
 
 ```md
-<h2>Options <span class="ht"><a href="https://github.com">reference</a></span></h2>
+<h2>Options <span class="md-badge"><a href="https://github.com">reference</a></span></h2>
 
-Some <span class="ht">item</span>…
+Some <span class="md-badge">item</span>…
 
-<h3>isEntry <span class="ht">default</span> <span class="ht">recommended</span></h3>
+<h3>isEntry <span class="md-badge">default</span> <span class="md-badge">recommended</span></h3>
 
 Some other content…
 ```
