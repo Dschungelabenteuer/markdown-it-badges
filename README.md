@@ -22,8 +22,33 @@ import { badgesPlugin } from 'markdown-it-badges';
 const md = mardownIt().use(badgesPlugin);
 ```
 
-You can then reference add simple badges (e.g. `[[some badge]]`) and reference badges (e.g.)
-`[[ref:label|some URL]]`
+### Simple badges
+
+- Simple badges are simply defined by wrapping their content with `[[` and `]]`.
+- You may specify a custom class by wrapping the class name between double tilde `~~`.
+- If the double tilde wraps the whole badge content, then its content will be used as the class
+  name.
+
+```md
+- [[default]]
+- [[~~custom-class~~default]]
+- [[~~recommended~~]]
+```
+
+### Reference badges
+
+- Reference badges work the same way as simple badges, but they include a link.
+- Just like simple badges, their content is delimited by `[[` and `]]`.
+- Inside thoese delimiters, you must use the `ref` keyword, followed by a pipe `|` and the link.
+- By default, the badge content will display "reference".
+- A custom label can be set by adding a `:` after the `ref` keyword, followed by the label.
+
+```md
+- [[ref|https://example.com]]
+- [[ref:Lean more|https://example.com]]
+- [[~~custom-class~~ref|https://example.com]]
+- [[~~custom-class~~ref:Lean more|https://example.com]]
+```
 
 ### Options
 
@@ -40,11 +65,15 @@ Input:
 ```md
 ## Options [[ref:reference|https://github.com]]
 
-Some [[item]]…
+Some [[~~customClass~~item]]…
 
-### isEntry [[default]] [[recommended]]
+### isEntry [[default]] [[~~recommended~~]]
 
 Some other content…
+```
+
+```
+
 ```
 
 Output:
@@ -52,9 +81,9 @@ Output:
 ```md
 <h2>Options <span class="md-badge"><a href="https://github.com">reference</a></span></h2>
 
-Some <span class="md-badge">item</span>…
+Some <span class="md-badge customClass">item</span>…
 
-<h3>isEntry <span class="md-badge">default</span> <span class="md-badge">recommended</span></h3>
+<h3>isEntry <span class="md-badge">default</span> <span class="md-badge recommended">recommended</span></h3>
 
 Some other content…
 ```

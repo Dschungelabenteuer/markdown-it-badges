@@ -18,6 +18,7 @@ export type HTMLTagDefinition = {
 
 /** Structure of a parsed badge. */
 export type ParsedBadge = {
+  className?: string;
   label: string;
   url?: string;
 };

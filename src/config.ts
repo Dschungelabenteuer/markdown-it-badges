@@ -19,6 +19,12 @@ export const ruleEndsWith = ']]';
 /** Identifier for reference badges. */
 export const referenceIdentifier = 'ref:';
 
+/** Delimiter for custom classes. */
+export const classNameDelimiter = '~~';
+
+/** Pattern for custom classes. */
+export const classNamePattern = /~~(.*)~~/g;
+
 /** Default reference label. */
 export const referenceLabel = 'reference';
 

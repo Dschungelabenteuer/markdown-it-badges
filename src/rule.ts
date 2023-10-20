@@ -5,6 +5,8 @@ import type { ParsedBadge, PluginOptions, RuleFunction } from './types';
 import {
   baseRendererName,
   defaultClassName,
+  classNamePattern,
+  classNameDelimiter,
   referenceIdentifier,
   referenceLabel,
   referenceSeparator,
@@ -17,14 +19,23 @@ import {
  * @param content Raw content of the badge.
  */
 function parseBadgeContent(content: string): ParsedBadge {
+  const [classNamePlaceholder] = content.match(classNamePattern) ?? [];
+  if (classNamePlaceholder) content = content.replace(classNamePlaceholder, '');
+
+  // Maybe sanitize some day.
+  const className = classNamePlaceholder
+    ?.slice(classNameDelimiter.length)
+    .slice(0, -classNameDelimiter.length);
+  if (content.length === 0) content = className!;
+
   if (content.startsWith(referenceIdentifier)) {
     const referenceParams = content.replace(referenceIdentifier, '').split(referenceSeparator);
     return referenceParams.length > 1
-      ? { label: referenceParams[0], url: referenceParams[1] }
-      : { label: referenceLabel, url: referenceParams[0] };
+      ? { className, label: referenceParams[0], url: referenceParams[1] }
+      : { className, label: referenceLabel, url: referenceParams[0] };
   }
 
-  return { label: content };
+  return { className, label: content };
 }
 
 /**
@@ -33,9 +44,9 @@ function parseBadgeContent(content: string): ParsedBadge {
  * @param className Class name of the badge.
  */
 function getBadgeContent(content: string, className: string) {
-  const { url, label } = parseBadgeContent(content);
+  const { url, label, className: badgeClassName } = parseBadgeContent(content);
   const actualContent = url ? createLink(label, url) : label;
-  return createBadge(actualContent, className);
+  return createBadge(actualContent, className, badgeClassName);
 }
 
 /**
@@ -50,10 +61,16 @@ function createLink(label: string, url: string) {
 /**
  * Creates a badge with specified class name and label.
  * @param label Label of the badge.
- * @param className Class name of the badge.
+ * @param className Global class name of the badge.
+ * @param badgeClassName Specific class name of the badge.
  */
-function createBadge(label: string, className?: PluginOptions['className']) {
-  return className ? `<span class="${className}">${label}</span>` : label;
+function createBadge(
+  label: string,
+  className?: PluginOptions['className'],
+  badgeClassName?: string,
+) {
+  const mergedClassName = [className, badgeClassName].filter(Boolean).join(' ');
+  return mergedClassName ? `<span class="${mergedClassName}">${label}</span>` : label;
 }
 
 /**

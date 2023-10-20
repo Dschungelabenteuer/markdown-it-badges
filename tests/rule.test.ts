@@ -4,12 +4,13 @@ import { defaultClassName, referenceLabel } from '../src/config';
 
 const { p, h2, h3, pre, code } = htmlBlocks;
 const withClassNameString = '(with className)';
-type TheyParams = { src: string; expected: string };
+type TheyParams = { src: string; expected: string; expectedClass?: string };
 
-const they = (statement: string, { src, expected }: TheyParams) => {
+const they = (statement: string, { src, expected, expectedClass }: TheyParams) => {
   const run = (className?: string) => {
-    const finalClassName = className ? `${defaultClassName} ${className}` : defaultClassName;
-    const replace = `<span class="${finalClassName}">$1</span>`;
+    const addExpectedClass = (s: string) => (expectedClass ? `${s} ${expectedClass}` : s);
+    const mergedClassname = className ? `${defaultClassName} ${className}` : defaultClassName;
+    const replace = `<span class="${addExpectedClass(mergedClassname)}">$1</span>`;
     const actuallyExpected = expected.replace(/<#>(.*?)<\/#>/g, replace);
     expect(render({ className }, src)).toStrictEqual(`${actuallyExpected}\n`);
   };
@@ -32,6 +33,18 @@ describe('Rule', () => {
       expected: h3('isEntry <#>default</#> and <#>recommended</#> :)'),
     });
 
+    they('should replace simple badge with custom class name', {
+      src: '### isEntry [[~~custom-class~~default]] :)',
+      expected: h3('isEntry <#>default</#> :)'),
+      expectedClass: 'custom-class',
+    });
+
+    they('should replace simple badge with auto class name', {
+      src: '### isEntry [[~~recommended~~]] :)',
+      expected: h3('isEntry <#>recommended</#> :)'),
+      expectedClass: 'recommended',
+    });
+
     they('should replace reference badges with custom label', {
       src: '## isEntry [[ref:custom|https://github.com]]',
       expected: h2('isEntry <#><a href="https://github.com">custom</a></#>'),
@@ -40,6 +53,18 @@ describe('Rule', () => {
     they('should replace reference badges with default label', {
       src: '## isEntry [[ref:https://github.com]]',
       expected: h2(`isEntry <#><a href="https://github.com">${referenceLabel}</a></#>`),
+    });
+
+    they('should replace reference badges with custom label', {
+      src: '## isEntry [[~~custom-class~~ref:custom|https://github.com]]',
+      expected: h2('isEntry <#><a href="https://github.com">custom</a></#>'),
+      expectedClass: 'custom-class',
+    });
+
+    they('should replace reference badges with default label', {
+      src: '## isEntry [[~~custom-class~~ref:https://github.com]]',
+      expected: h2(`isEntry <#><a href="https://github.com">${referenceLabel}</a></#>`),
+      expectedClass: 'custom-class',
     });
 
     it('should not transform when used withing inline code', () => {
