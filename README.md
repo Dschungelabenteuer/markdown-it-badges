@@ -72,10 +72,6 @@ Some [[~~customClass~~item]]…
 Some other content…
 ```
 
-```
-
-```
-
 Output:
 
 ```md
