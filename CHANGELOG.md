@@ -1,5 +1,11 @@
 # markdown-it-badges
 
+## 1.1.0
+
+### Minor Changes
+
+- d373296: Added support for per-badge custom classes
+
 ## 1.0.1
 
 ### Patch Changes
