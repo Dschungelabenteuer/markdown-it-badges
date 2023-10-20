@@ -1,7 +1,7 @@
 {
   "name": "markdown-it-badges",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "An easy way of adding badges to your markdown content",
   "author": "Charles Gruenais",
   "license": "MIT",
